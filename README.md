@@ -148,7 +148,7 @@ All architecture and security controls have been validated against live deployme
 
 | Check | Acceptance criteria | Recorded evidence | Status |
 | --- | --- | --- | --- |
-| **CI validation & security scan** | Terraform format & validation pass; Checkov static analysis passes without unexpected findings. | GitHub Actions CI run; local Checkov scan (0 failures, 7 baseline skips). | **PASSED** |
+| **CI validation & security scan** | Terraform format & validation pass; Checkov static analysis passes without unexpected findings. | GitHub Actions CI run; Checkov scan (0 failures, 19 baseline skips). | **PASSED** |
 | **HTTP through ALB** | ALB DNS returns HTTP 200 with application payload; targets report healthy state. | `curl -i` returned HTTP 200; target health confirmed healthy in both AZs. | **PASSED** |
 | **SSM access (No SSH)** | Operator establishes session/command execution to private instances via VPC Interface Endpoints without public SSH or IP. | Verified via Systems Manager agent (Status: Online, ResponseCode: 0). | **PASSED** |
 | **IMDSv2 enforcement** | IMDSv1 unauthenticated calls blocked; IMDSv2 session token call succeeds. | Verified token retrieval and metadata access via SSM script execution. | **PASSED** |

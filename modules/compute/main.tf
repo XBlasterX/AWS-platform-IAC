@@ -51,6 +51,10 @@ resource "aws_autoscaling_group" "app" {
     value               = "AWS_Platform_IaC"
     propagate_at_launch = true
   }
+
+  lifecycle {
+    ignore_changes = [desired_capacity]
+  }
 }
 
 resource "aws_autoscaling_policy" "cpu_target_tracking" {
