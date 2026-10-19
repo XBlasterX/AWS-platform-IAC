@@ -82,11 +82,19 @@ The table inventories every check ID currently in `.checkov.baseline`. It distin
 
 | Check ID | Resource | Current rationale / Architectural trade-off |
 | --- | --- | --- |
-| `CKV_AWS_2` | `aws_lb_listener.http` | Lab trade-off: public HTTP demonstration; no HTTPS listener or TLS policy configured to avoid custom domain overhead. |
+| `CKV_AWS_2`, `CKV_AWS_103` | `aws_lb_listener.http` | Lab trade-off: public HTTP demonstration; no HTTPS listener or TLS policy configured to avoid custom domain overhead. |
+| `CKV2_AWS_20` | `aws_lb.public` | Lab trade-off: HTTP requests forwarded instead of redirected to HTTPS. |
+| `CKV_AWS_378` | `aws_lb_target_group.app` | Lab trade-off: internal ALB-to-EC2 traffic uses unencrypted HTTP. |
+| `CKV2_AWS_28` | `aws_lb.public` | Lab trade-off: AWS WAF Web ACL omitted to eliminate recurring hourly and inspection charges in lab. |
 | `CKV_AWS_91` | `aws_lb.public` | Lab trade-off: ALB access logging and dedicated S3 destination omitted to keep lab footprint minimal. Flow Logs collect L4 metadata. |
 | `CKV_AWS_150` | `aws_lb.public` | Lab trade-off: deletion protection is explicitly disabled (`false`) to permit clean lab teardown. |
+| `CKV_AWS_145` | `aws_s3_bucket.terraform_state` | Lab trade-off: S3-managed AES256 encryption used instead of customer-managed KMS key. |
+| `CKV_AWS_18`, `CKV_AWS_144` | `aws_s3_bucket.terraform_state` | Lab trade-off: S3 access logging and cross-region replication omitted for state bucket. |
+| `CKV2_AWS_61`, `CKV2_AWS_62` | `aws_s3_bucket.terraform_state` | Lab trade-off: S3 state bucket lifecycle expiration and event notifications omitted. |
 | `CKV_AWS_158` | `aws_cloudwatch_log_group.flow_logs` | Lab trade-off: AWS-managed encryption used instead of customer-managed KMS key (CMK). |
 | `CKV_AWS_338` | `aws_cloudwatch_log_group.flow_logs` | Lab trade-off: retention set to 7 days rather than 1-year compliance requirement to optimize storage. |
+| `CKV2_AWS_12` | `aws_vpc.main` | Scanner limitation: Terraform adopts default SG in `modules/security` and removes all rules, but graph parser across module boundaries flags VPC resource. |
+| `CKV2_AWS_5` | `aws_security_group.alb`, `aws_security_group.ec2` | Scanner limitation: Security groups are attached dynamically across module outputs. |
 | `CKV_AWS_260` | `aws_vpc_security_group_ingress_rule.alb_http` | Lab trade-off: public ALB accepts HTTP traffic on port 80 from `0.0.0.0/0`. |
 | `CKV_AWS_260` | `aws_vpc_security_group_ingress_rule.ec2_from_alb` | Scanner limitation: Checkov flags ingress on port 80 even though rule restricts source strictly to the ALB security group (`referenced_security_group_id`). |
 
