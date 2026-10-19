@@ -1,0 +1,8 @@
+aws_region          = "eu-north-1"
+vpc_cidr            = "10.40.0.0/16"
+public_subnet_cidr  = ["10.40.10.0/24", "10.40.20.0/24"]
+private_subnet_cidr = ["10.40.30.0/24", "10.40.40.0/24"]
+environment         = "lab"
+project_name        = "AWS_Platform_IaC"
+availability_zone   = ["eu-north-1a", "eu-north-1b"]
+

@@ -1,28 +1,11 @@
 {
     "failed_checks": [
         {
-            "file": "/bootstrap/main.tf",
-            "findings": [
-                {
-                    "resource": "aws_s3_bucket.terraform_state",
-                    "check_ids": [
-                        "CKV2_AWS_61",
-                        "CKV2_AWS_62",
-                        "CKV_AWS_144",
-                        "CKV_AWS_145",
-                        "CKV_AWS_18"
-                    ]
-                }
-            ]
-        },
-        {
             "file": "/modules/load_balancer/main.tf",
             "findings": [
                 {
                     "resource": "module.load_balancer.aws_lb.public",
                     "check_ids": [
-                        "CKV2_AWS_20",
-                        "CKV2_AWS_28",
                         "CKV_AWS_150",
                         "CKV_AWS_91"
                     ]
@@ -30,14 +13,7 @@
                 {
                     "resource": "module.load_balancer.aws_lb_listener.http",
                     "check_ids": [
-                        "CKV_AWS_103",
                         "CKV_AWS_2"
-                    ]
-                },
-                {
-                    "resource": "module.load_balancer.aws_lb_target_group.app",
-                    "check_ids": [
-                        "CKV_AWS_378"
                     ]
                 }
             ]
@@ -55,61 +31,18 @@
             ]
         },
         {
-            "file": "/modules/network/main.tf",
-            "findings": [
-                {
-                    "resource": "module.network.aws_vpc.main",
-                    "check_ids": [
-                        "CKV2_AWS_12"
-                    ]
-                }
-            ]
-        },
-        {
             "file": "/modules/security/main.tf",
             "findings": [
                 {
-                    "resource": "module.security.aws_security_group.alb",
-                    "check_ids": [
-                        "CKV2_AWS_5"
-                    ]
-                },
-                {
-                    "resource": "module.security.aws_security_group.ec2",
-                    "check_ids": [
-                        "CKV2_AWS_5"
-                    ]
-                },
-                {
-                    "resource": "module.security.aws_vpc_security_group_egress_rule.alb_to_ec2",
-                    "check_ids": [
-                        "CKV_AWS_23"
-                    ]
-                },
-                {
-                    "resource": "module.security.aws_vpc_security_group_egress_rule.ec2_to_endpoint",
-                    "check_ids": [
-                        "CKV_AWS_23"
-                    ]
-                },
-                {
                     "resource": "module.security.aws_vpc_security_group_ingress_rule.alb_http",
                     "check_ids": [
-                        "CKV_AWS_23",
                         "CKV_AWS_260"
                     ]
                 },
                 {
                     "resource": "module.security.aws_vpc_security_group_ingress_rule.ec2_from_alb",
                     "check_ids": [
-                        "CKV_AWS_23",
                         "CKV_AWS_260"
-                    ]
-                },
-                {
-                    "resource": "module.security.aws_vpc_security_group_ingress_rule.endpoints_https",
-                    "check_ids": [
-                        "CKV_AWS_23"
                     ]
                 }
             ]

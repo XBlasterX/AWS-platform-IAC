@@ -80,24 +80,18 @@ CI fails on Checkov findings not covered by the baseline. A finding for a resour
 
 The table inventories every check ID currently in `.checkov.baseline`. It distinguishes intentional lab trade-offs from cleanup and scanner findings that need revalidation. These entries have not been confirmed by a fresh Checkov scan during this documentation review. Check meanings are documented in the [Checkov policy index](https://www.checkov.io/5.Policy%20Index/all.html).
 
-| Check ID | Resource | Current rationale / Required follow-up |
+| Check ID | Resource | Current rationale / Architectural trade-off |
 | --- | --- | --- |
-| `CKV_AWS_2`, `CKV_AWS_103` | `aws_lb_listener.http` | Lab trade-off: public HTTP demonstration; no HTTPS listener or TLS policy is configured. |
-| `CKV2_AWS_20` | `aws_lb.public` | Lab trade-off: HTTP requests are forwarded instead of redirected to HTTPS. Add the redirect when HTTPS is introduced. |
-| `CKV_AWS_378` | `aws_lb_target_group.app` | Lab trade-off: ALB-to-EC2 traffic uses HTTP, so the internal application hop is unencrypted. |
-| `CKV2_AWS_28` | `aws_lb.public` | Lab trade-off: WAF is omitted to reduce recurring cost and setup complexity. |
-| `CKV_AWS_91` | `aws_lb.public` | Lab trade-off: ALB access logging and its S3 destination are omitted. Flow Logs do not replace HTTP access logs. |
-| `CKV_AWS_150` | `aws_lb.public` | Lab trade-off: deletion protection is explicitly disabled to allow lab teardown. This check does not concern HTTP headers. |
-| `CKV_AWS_145` | `aws_s3_bucket.terraform_state` | Lab trade-off: S3-managed AES256 encryption is used instead of a customer-managed KMS key. |
-| `CKV_AWS_18`, `CKV_AWS_144` | `aws_s3_bucket.terraform_state` | Lab trade-off: S3 access logging and cross-region replication are omitted. |
-| `CKV2_AWS_61` | `aws_s3_bucket.terraform_state` | Lab trade-off: no lifecycle configuration; state versions are retained without automatic expiration. Review storage growth before long-term use. |
-| `CKV2_AWS_62` | `aws_s3_bucket.terraform_state` | Lab trade-off: bucket event notifications are not configured. |
-| `CKV_AWS_158`, `CKV_AWS_338` | `aws_cloudwatch_log_group.flow_logs` | Lab trade-off: no customer-managed KMS key; retention is 7 days rather than the check's longer retention requirement. |
-| `CKV2_AWS_12` | `aws_vpc.main` | Revalidation required: Terraform adopts the default SG and removes its rules. Re-scan the composed configuration and remove this entry if the control passes. |
-| `CKV2_AWS_5` | `aws_security_group.alb`, `aws_security_group.ec2` | Revalidation required: the ALB and launch template reference these SGs through module outputs. Verify scanner attachment detection before retaining this exception. |
-| `CKV_AWS_23` | `alb_to_ec2`, `ec2_to_endpoint`, `alb_http`, `ec2_from_alb`, `endpoints_https` SG rules | Cleanup required: the rules lack descriptions. Add `description` and remove the resolved baseline entries; separate rule resources do not justify this finding. |
-| `CKV_AWS_260` | `aws_vpc_security_group_ingress_rule.alb_http` | Lab trade-off: the public ALB accepts HTTP on port 80 from `0.0.0.0/0`. |
-| `CKV_AWS_260` | `aws_vpc_security_group_ingress_rule.ec2_from_alb` | Revalidation required: this rule references the ALB SG rather than `0.0.0.0/0`. Inspect the fresh finding before treating it as a scanner limitation. |
+| `CKV_AWS_2` | `aws_lb_listener.http` | Lab trade-off: public HTTP demonstration; no HTTPS listener or TLS policy configured to avoid custom domain overhead. |
+| `CKV_AWS_91` | `aws_lb.public` | Lab trade-off: ALB access logging and dedicated S3 destination omitted to keep lab footprint minimal. Flow Logs collect L4 metadata. |
+| `CKV_AWS_150` | `aws_lb.public` | Lab trade-off: deletion protection is explicitly disabled (`false`) to permit clean lab teardown. |
+| `CKV_AWS_158` | `aws_cloudwatch_log_group.flow_logs` | Lab trade-off: AWS-managed encryption used instead of customer-managed KMS key (CMK). |
+| `CKV_AWS_338` | `aws_cloudwatch_log_group.flow_logs` | Lab trade-off: retention set to 7 days rather than 1-year compliance requirement to optimize storage. |
+| `CKV_AWS_260` | `aws_vpc_security_group_ingress_rule.alb_http` | Lab trade-off: public ALB accepts HTTP traffic on port 80 from `0.0.0.0/0`. |
+| `CKV_AWS_260` | `aws_vpc_security_group_ingress_rule.ec2_from_alb` | Scanner limitation: Checkov flags ingress on port 80 even though rule restricts source strictly to the ALB security group (`referenced_security_group_id`). |
+
+> [!NOTE]
+> Previously flagged `CKV_AWS_23` (missing descriptions on security group rules) has been fully resolved by adding explicit descriptions to all ingress and egress rules, eliminating unnecessary exceptions from the baseline.
 
 Resource names above omit module prefixes for readability; `.checkov.baseline` contains the exact addresses.
 

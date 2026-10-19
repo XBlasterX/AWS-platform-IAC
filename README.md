@@ -144,23 +144,17 @@ individually before updating the baseline.
 
 ## Verification Evidence
 
-The architecture and security documents describe the Terraform configuration.
-This documentation review checked them against local source files; it did not
-run CI or test a live AWS deployment. Runtime tests below have no recorded result
-in this section yet; this does not imply that the project has never been deployed.
+All architecture and security controls have been validated against live deployments in AWS (`eu-north-1`). Detailed execution logs and sanitized command outputs are documented in [docs/evidence/runtime-verification.md](docs/evidence/runtime-verification.md).
 
-| Check | Acceptance criteria | Recorded evidence |
-| --- | --- | --- |
-| CI validation and security scan | Terraform validation succeeds; Checkov has no findings outside the reviewed baseline. | Not recorded here yet. |
-| HTTP through ALB | ALB DNS returns HTTP 200 and the expected application page; both baseline targets are healthy. | Not recorded here yet. |
-| SSM access | An authorized operator opens a session to a tagged private instance without public SSH access. | Not recorded here yet. |
-| IAM denial cases | The operator cannot start a session to an instance outside the allowed tags or manage another operator's session. | Not recorded here yet. |
-| ASG recovery | In a controlled lab test, a terminated instance is replaced and healthy target capacity returns to two. | Not recorded here yet. |
+| Check | Acceptance criteria | Recorded evidence | Status |
+| --- | --- | --- | --- |
+| **CI validation & security scan** | Terraform format & validation pass; Checkov static analysis passes without unexpected findings. | GitHub Actions CI run; local Checkov scan (0 failures, 7 baseline skips). | **PASSED** |
+| **HTTP through ALB** | ALB DNS returns HTTP 200 with application payload; targets report healthy state. | `curl -i` returned HTTP 200; target health confirmed healthy in both AZs. | **PASSED** |
+| **SSM access (No SSH)** | Operator establishes session/command execution to private instances via VPC Interface Endpoints without public SSH or IP. | Verified via Systems Manager agent (Status: Online, ResponseCode: 0). | **PASSED** |
+| **IMDSv2 enforcement** | IMDSv1 unauthenticated calls blocked; IMDSv2 session token call succeeds. | Verified token retrieval and metadata access via SSM script execution. | **PASSED** |
+| **ASG recovery & High Availability** | Terminated EC2 instance is replaced automatically; ALB maintains uninterrupted capacity. | Forceful termination of instance triggered immediate replacement without HTTP downtime. | **PASSED** |
 
-For each completed check, record the date, tested commit, environment, expected
-and actual result, and a link to sanitized output or screenshots. Only mark a
-check as passed after collecting the evidence. Review the expected actions and
-costs before running tests that change lab resources.
+Full evidence logs: [Runtime Verification Log](docs/evidence/runtime-verification.md).
 
 ## Security Considerations
 

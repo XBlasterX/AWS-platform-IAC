@@ -26,6 +26,9 @@ jobs:
         with:
           terraform_version: "1.16.4"
 
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
       - name: Terraform Init
         run: terraform init -backend=false -input=false
         working-directory: environments/lab

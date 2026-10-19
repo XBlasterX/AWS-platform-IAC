@@ -1,0 +1,4 @@
+aws_region   = "eu-north-1"
+environment  = "lab"
+project_name = "AWS_Platform_IaC"
+

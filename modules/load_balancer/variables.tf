@@ -10,8 +10,3 @@ variable "alb_security_group_id" {
   type        = string
   description = "alb security"
 }
-
-variable "target_group_arns" {
-  type        = string
-  description = "target group arn"
-}
